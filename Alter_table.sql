@@ -1,4 +1,4 @@
-CREATE TABLE testing_table(
+CREATE TABLE IF NOT EXISTS testing_table(
 name TEXT,
 contact_name TEXT,
 roll_no TEXT
