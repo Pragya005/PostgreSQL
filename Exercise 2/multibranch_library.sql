@@ -43,11 +43,11 @@ INSERT INTO Holdings VALUES
 ('B3','Susannah',3),
 ('B3','The Wife',1);
 
---
+-- name of all library books published by Macmillan
 SELECT Title FROM Titles
 WHERE Publisher = 'Macmillan';
 
---
+--branches that hold any book by Ann Brown(subquery)
 SELECT DISTINCT Branch FROM Holdings 
 WHERE Title IN
 (
@@ -55,13 +55,13 @@ WHERE Title IN
 	WHERE Author = 'Ann Brown'
 );
 
---
+--branches that hold any books by Ann Brown(join)
 SELECT DISTINCT h.Branch
 FROM Holdings h
 JOIN Titles t ON t.Title = h.Title
 WHERE t.Author = 'Ann Brown';
 
---
+--total no. of books at each branch
 SELECT Branch, SUM(copies) AS total_books
 FROM Holdings
 GROUP BY Branch;
