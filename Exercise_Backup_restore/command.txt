@@ -1,0 +1,11 @@
+-- run command in psql to create backup(custom format - compressed)
+\! pg_dump -U postgres -d db -F c -f "<file-path>\db_backup.backup"
+
+
+-- run command in psql to create backup(plain-text sql format)
+\! pg_dump -U postgres -d db -F p -f "<file-path>\db_backup.backup"
+
+
+-- run command in psql to restore backup in new database
+CREATE DATABASE restored;
+\! pg_restore -U postgres -d restored "<file-path>\db_backup.backup"
