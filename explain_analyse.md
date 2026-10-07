@@ -51,7 +51,8 @@ JOIN emp.Employees e ON e.id = c.employee_id
 GROUP BY e.id, e.name
 HAVING SUM(commission_amount)>3000
 ORDER BY total_commission;
- 
+ ![alt text](image.png)
+
 The EXPLAIN output shows how PostgreSQL plans to execute the query. 
 •	Seq Scan means PostgreSQL reads the rows of the table sequentially.
 •	Hash Join is used to join Employees and Commissions using e.id = c.employee_id.
@@ -73,6 +74,7 @@ FROM (
 ) AS employee_commissions
 WHERE total_commission > 3000
 ORDER BY total_commission;
+ ![alt text](image-1.png)
  
 The EXPLAIN output is almost the same as the previous query but it has additional output row – subquery scan on employee_commissions, because the result of the inner query is treated as a subquery table.
 Therefore, according to EXPLAIN output, the JOIN query is slightly better, because its estimated cost is slightly lower and it does not have the additional Subquery Scan.
