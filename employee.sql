@@ -89,7 +89,7 @@ HAVING SUM(c.commission_amount) = (
 
 
 --employees getting commission more than 3000
-EXPLAIN SELECT e.name, SUM(commission_amount) AS total_commission
+SELECT e.name, SUM(commission_amount) AS total_commission
 FROM emp.Commissions c
 JOIN emp.Employees e ON e.id = c.employee_id 
 GROUP BY e.id, e.name
