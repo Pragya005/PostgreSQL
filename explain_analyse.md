@@ -15,10 +15,15 @@ rows: Estimated number of rows produced by the node.
 
 width: Estimated average size of each output row in bytes.
 
+
 Extra columns in EXPLAIN ANALYSE
+
 actual time: actual time taken by the node in milliseconds.
+
 actual rows: actual number of rows produced.
+
 loops: number of times the node was executed.
+
 
 
 Q2. Finding comments made by a user
@@ -41,6 +46,7 @@ ANALYZE comments; (update statistics of comments table used by query planner)
 PostgreSQL now should take less time to exexute the same query because of B-tree index.
 
 
+
 Q3. polymorphic association - indexing
 
 SELECT * FROM comments WHERE commentable_id = 1
@@ -54,6 +60,7 @@ CREATE INDEX idx_comments_user
 ON comments(commentable_type, commentable_id, user_id);
 
 
+
 Q4. 
 Q4.1 EXPLAIN a SELECT query using INNER JOIN
 
@@ -65,6 +72,7 @@ JOIN emp.Employees e ON e.id = c.employee_id
 GROUP BY e.id, e.name
 HAVING SUM(commission_amount)>3000
 ORDER BY total_commission;
+
  ![alt text](image.png)
 
 
@@ -96,6 +104,7 @@ FROM (
 ) AS employee_commissions
 WHERE total_commission > 3000
 ORDER BY total_commission;
+
  ![alt text](image-1.png)
  
 The EXPLAIN output is almost the same as the previous query but it has additional output row – subquery scan on employee_commissions, because the result of the inner query is treated as a subquery table.
