@@ -1,14 +1,18 @@
 Exercise 7
 
 Q1. What do different columns in the output of EXPLAIN mean?
+
 PostgreSQL EXPLAIN shows the execution plan as a tree of plan nodes. Eg - 
 
 Seq Scan on users  (cost=0.00..18500.00 rows=1000000 width=40)
   Filter: (age > 25)
 
 Plan node: Seq Scan, Index Scan, Index Only Scan, Bitmap Heap Scan, Bitmap Index Scan, Nested Loop, Hash Join, Merge Join. It describes how Postgres accesses or processes data.
+
 cost: Written as startup_cost..total. Startup cost is the estimated cost before producing the first row; total cost is the estimated cost to produce all rows. These are planner internal units, not milliseconds.
+
 rows: Estimated number of rows produced by the node.
+
 width: Estimated average size of each output row in bytes.
 
 Extra columns in EXPLAIN ANALYSE
@@ -18,25 +22,34 @@ loops: number of times the node was executed.
 
 
 Q2. Finding comments made by a user
+
 EXPLAIN SELECT * FROM comments WHERE user_id = 41;
+
 Q2.1 What does it mean when EXPLAIN rows equals COUNT(id)?
+
 It means PostgreSQL planner estimates that almost all rows in comments satisfy user_id = 41. The EXPLAIN rows value is only an estimate based on planner statistics; it is not an exact count.
 
 Q2.2 Is the query optimal? How can it be optimized?
+
 If user_id = 41 matches only a small number of rows, the sequential scan is inefficient because the whole table is scanned. We should create index on user_id column.
+
 CREATE INDEX idx_comments_user_id
 ON comments(user_id);
 
 ANALYZE comments; (update statistics of comments table used by query planner)
+
 PostgreSQL now should take less time to exexute the same query because of B-tree index.
 
 
 Q3. polymorphic association - indexing
+
 SELECT * FROM comments WHERE commentable_id = 1
 AND commentable_type = 'Article' AND user_id = 1;
 
 Q3.1 Which columns should be indexed and in which order?
+
 Use a composite index(index on multiple columns) because all three columns are used in the WHERE clause:
+
 CREATE INDEX idx_comments_user
 ON comments(commentable_type, commentable_id, user_id);
 
@@ -45,6 +58,7 @@ Q4.
 Q4.1 EXPLAIN a SELECT query using INNER JOIN
 
 From Exercise 8 – part iv
+
 SELECT e.name, SUM(commission_amount) AS total_commission
 FROM emp.Commissions c
 JOIN emp.Employees e ON e.id = c.employee_id 
@@ -53,17 +67,25 @@ HAVING SUM(commission_amount)>3000
 ORDER BY total_commission;
  ![alt text](image.png)
 
+
 The EXPLAIN output shows how PostgreSQL plans to execute the query. 
+
 •	Seq Scan means PostgreSQL reads the rows of the table sequentially.
+
 •	Hash Join is used to join Employees and Commissions using e.id = c.employee_id.
+
 •	Sort sorts the records by e.id before grouping and finally sorts them by total_commission.
+
 •	GroupAggregate performs the GROUP BY and calculates the SUM() of commission.
+
 •	The Filter condition represents the HAVING SUM(commission_amount) > 3000 condition.
+
 EXPLAIN does not give only one row.
 
 
 
 Q4.2 Same query using a subquery
+
 SELECT name, total_commission
 FROM (
     SELECT e.name, e.id, SUM(c.commission_amount) AS total_commission
